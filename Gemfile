@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby '2.6.3'
+ruby '2.3.7'
 
 gem 'rubocop', '0.60.0'
 

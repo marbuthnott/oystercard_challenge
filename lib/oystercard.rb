@@ -7,13 +7,13 @@ class Oystercard
     @balance = 0
   end
 
-  def top_up(money)
-    raise 'Cannot input that amount! Maximum balance of $90 will be exceeded' if full?
-    @balance += money
+  def top_up(amount)
+    raise 'Cannot input that amount! Maximum balance of $90 will be exceeded' if  @balance + amount > CAPACITY
+    @balance += amount
   end
 
-  def full?
-    @balance >= CAPACITY
+  def deduct(amount)
+    @balance -= amount
   end
 
 end

@@ -37,13 +37,20 @@ describe Oystercard do
     end
 
     it 'can touch in' do
+      oystercard.top_up(5)
       oystercard.touch_in
       expect(oystercard.in_journey).to eq(true)
+    end
+
+    it 'raises an error when balance is less than minimum balance' do
+      minimum = Oystercard::MINIMUM
+      expect { oystercard.touch_in }.to raise_error "Cannot touch in: balance below minimum of £#{minimum}. Top up."
     end
   end
 
   describe '#touch_out' do
     it 'can touch out' do
+      oystercard.top_up(5)
       oystercard.touch_in
       oystercard.touch_out
       expect(oystercard.in_journey).to eq(false)

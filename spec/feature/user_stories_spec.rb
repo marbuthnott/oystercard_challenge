@@ -64,5 +64,14 @@ describe 'User Stories' do
     expect(oystercard.journeys).to eq [ { entry_station: entry_station, exit_station: exit_station } ]
   end
 
+  # In order to know how far I have travelled
+  # As a customer
+  # I want to know what zone a station is in
+  
+  it "will know what zone a station is in" do 
+    kings_cross = Station.new('Kings_Cross', 1)
+    expect(kings_cross.zone).to eq 1
+  end 
 
 end
+

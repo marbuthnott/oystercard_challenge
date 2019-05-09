@@ -5,6 +5,9 @@ require 'money'
 describe Oystercard do
   subject(:oystercard) { described_class.new(5) }
   let (:station) { double(:station) }
+  let (:entry_station) { double(:station) }
+  let (:exit_station) { double(:station) }
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
 
   context 'instance variables for Oystercard class' do
 
@@ -12,6 +15,17 @@ describe Oystercard do
       oystercard = Oystercard.new
       expect(oystercard.balance).to eq(0)
     end
+
+    it 'stores a journey' do
+      oystercard.touch_in(entry_station)
+      oystercard.touch_out(exit_station)
+      expect(oystercard.journeys).to include journey
+    end
+
+    it 'starts with no journeys stored' do
+      expect(oystercard.journeys.empty?).to eq true
+    end 
+  
   end
 
   describe '#top_up' do
@@ -37,8 +51,8 @@ describe Oystercard do
     end
 
     it 'records our entry station' do
-      oystercard.touch_in(station)
-      expect(oystercard.entry_station).to eq(station)
+      oystercard.touch_in(entry_station)
+      expect(oystercard.journey[:entry_station]).to eq entry_station
     end
 
     it 'raises an error when balance is less than minimum balance' do
@@ -50,14 +64,21 @@ describe Oystercard do
 
   describe '#touch_out' do
     it 'deducts my fare' do
-      expect { oystercard.touch_out }.to change { oystercard.balance }.by (-Oystercard::MINIMUM_CHARGE)
+      expect { oystercard.touch_out(exit_station) }.to change { oystercard.balance }.by (-Oystercard::MINIMUM_CHARGE)
     end
 
-    it 'forgets the entry station' do
-      oystercard.touch_in(station)
-      oystercard.touch_out
-      expect(oystercard.entry_station).to eq(nil)
+    # it 'forgets the entry station' do
+    #   oystercard.touch_in(station)
+    #   oystercard.touch_out
+    #   expect(oystercard.entry_station).to eq(nil)
+    # end
+
+    it 'records our exit station' do
+      oystercard.touch_in(entry_station)
+      oystercard.touch_out(exit_station) 
+      expect(oystercard.journeys[-1][:exit_station]).to eq exit_station
     end
+
   end
 
   describe '#in_journey?' do
@@ -67,12 +88,13 @@ describe Oystercard do
     end
     
     it 'returns false when touched out' do
-      oystercard.touch_in(station)
-      oystercard.touch_out
+      oystercard.touch_in(entry_station)
+      oystercard.touch_out(exit_station)
       expect(oystercard.in_journey?).to eq false
     end
   end
 
+  
 end
 
 # ISSUE COMMENTS - NameError: uninitialized constant Oystercard

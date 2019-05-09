@@ -44,4 +44,25 @@ describe 'User Stories' do
   #   oystercard.top_up(5)
   #   expect { oystercard.touch_out(3) }.to change { oystercard.balance }.by (-3)
   # end
+
+# In order to pay for my journey
+# As a customer
+# I need to know where I've travelled from
+
+  # In order to know where I have been
+  # As a customer
+  # I want to see all my previous trips
+
+  let (:station) { double(:station) }
+  let (:entry_station) { double(:station) }
+  let (:exit_station) { double(:station) }
+
+  it 'will know where I have been by letting me see all previous trips' do
+    oystercard = Oystercard.new(20)
+    oystercard.touch_in(entry_station)
+    oystercard.touch_out(exit_station)
+    expect(oystercard.journeys).to eq [ { entry_station: entry_station, exit_station: exit_station } ]
+  end
+
+
 end
